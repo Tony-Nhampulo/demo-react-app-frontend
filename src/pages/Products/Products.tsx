@@ -37,6 +37,9 @@ import {
 import { useLogout } from "@/hooks/pages/useLogout";
 import { useProducts } from "@/hooks/pages/useProducts";
 import Loader from "@/components/Loader";
+import { Editor } from "@tinymce/tinymce-react";
+import { Editor as editorType } from "tinymce";
+import { useRef } from "react";
 
 interface Product {
   id: number;
@@ -58,6 +61,13 @@ export function Products() {
   } = useProducts();
 
   //const id = useParams().id;
+
+  const editorRef = useRef<editorType | null>(null);
+  const log = () => {
+    if (editorRef.current) {
+      console.log(editorRef.current.getContent());
+    }
+  };
 
   return (
     <div className="p-6 max-w-4xl mx-auto space-y-4">
@@ -171,6 +181,46 @@ export function Products() {
       </div>
 
       <div className="border rounded-lg p-2">
+        <Editor
+          tinymceScriptSrc="/tinymce/tinymce.min.js"
+          licenseKey="gpl"
+          onInit={(_evt, editor) => (editorRef.current = editor)}
+          init={{
+            height: 200,
+            menubar: false,
+            plugins: [
+              "advlist",
+              "autolink",
+              "lists",
+              "link",
+              "image",
+              "charmap",
+              "anchor",
+              "searchreplace",
+              "visualblocks",
+              "code",
+              "fullscreen",
+              "insertdatetime",
+              "media",
+              "table",
+              "preview",
+              "help",
+              "wordcount",
+            ],
+            toolbar:
+              "undo redo | blocks | " +
+              "FontSize | bold italic forecolor | alignleft aligncenter " +
+              " alignright alignjustify | LineHeight bullist numlist outdent indent | " +
+              "removeformat | help",
+            content_style:
+              "body { font-family:Helvetica,Arial,sans-serif; font-size:12pt }",
+          }}
+        />
+
+        <Button onClick={log} className="mt-2 mb-7 w-full">
+          Click to Console Log the TinyMCE Editor content
+        </Button>
+
         <Table className="min-h-24">
           <TableHeader>
             <TableRow>
@@ -215,7 +265,7 @@ export function Products() {
                           <Form {...form}>
                             <form
                               onSubmit={form.handleSubmit((event) =>
-                                onSubmit(event, value.id)
+                                onSubmit(event, value.id),
                               )}
                               className="w-full space-y-2 flex flex-col items-center gap-2"
                             >
