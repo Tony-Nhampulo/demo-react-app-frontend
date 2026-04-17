@@ -214,6 +214,22 @@ export function Products() {
               "removeformat | help",
             content_style:
               "body { font-family:Helvetica,Arial,sans-serif; font-size:12pt }",
+
+            // Prevent HTML entity encoding
+            entity_encoding: "raw",
+
+            // Ensure UTF-8 characters are preserved
+            encoding: "xml",
+            entities: "160,nbsp",
+
+            // Preserve Tailwind classes and styles
+            valid_elements: "*[*]",
+            extended_valid_elements: "*[*]",
+            valid_children: "+body[style],+body[script]",
+            convert_urls: false,
+
+            // Keep inline styles and classes
+            verify_html: false,
           }}
         />
 
